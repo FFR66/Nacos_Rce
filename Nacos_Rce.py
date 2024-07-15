@@ -6,7 +6,6 @@ from urllib.parse import urljoin
 
 from colorama import Fore
 
-import config
 
 # proxy = {
 #     'https': 'http://127.0.0.1:8080',
