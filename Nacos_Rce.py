@@ -81,7 +81,6 @@ if __name__ == '__main__':
                 exploit(target=target, command=command, service=service, args=args)
             except Exception as e:
                         print(Fore.YELLOW + f"[-] {target} 可能不存在Nacos_Rce漏洞\n" + Fore.RESET)
-                        continue
     if args.file:
         with open(args.file, 'r', encoding="utf-8", errors="ignore") as f:
             for line in f.readlines():
