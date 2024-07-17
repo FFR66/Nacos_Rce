@@ -77,10 +77,10 @@ if __name__ == '__main__':
             target = r'http://' + args.url
         else:
             target = args.url
-            try:
-                exploit(target=target, command=command, service=service, args=args)
-            except Exception as e:
-                        print(Fore.YELLOW + f"[-] {target} 可能不存在Nacos_Rce漏洞\n" + Fore.RESET)
+        try:
+            exploit(target=target, command=command, service=service, args=args)
+        except Exception as e:
+                    print(Fore.YELLOW + f"[-] {target} 可能不存在Nacos_Rce漏洞\n" + Fore.RESET)
     if args.file:
         with open(args.file, 'r', encoding="utf-8", errors="ignore") as f:
             for line in f.readlines():
@@ -89,9 +89,8 @@ if __name__ == '__main__':
                 if not target.startswith('https://') and not target.startswith('http://'):
                     target = r'http://' + target
                     print(Fore.GREEN + '[+]' + Fore.RESET + ' 正在检测: {}'.format(target))
-                    try:
-
-                        exploit(target=target, command=command, service=service, args=args)
-                    except Exception as e:
-                        print(Fore.YELLOW + f"[-] {target} 可能不存在Nacos_Rce漏洞\n" + Fore.RESET)
-                        continue
+                try:
+                    exploit(target=target, command=command, service=service, args=args)
+                except Exception as e:
+                    print(Fore.YELLOW + f"[-] {target} 可能不存在Nacos_Rce漏洞\n" + Fore.RESET)
+                    continue
