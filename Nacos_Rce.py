@@ -88,7 +88,7 @@ if __name__ == '__main__':
                 # 如果url没有包括https
                 if not target.startswith('https://') and not target.startswith('http://'):
                     target = r'http://' + target
-                    print(Fore.GREEN + '[+]' + Fore.RESET + ' 正在检测: {}'.format(target))
+                print(Fore.GREEN + '[+]' + Fore.RESET + ' 正在检测: {}'.format(target))
                 try:
                     exploit(target=target, command=command, service=service, args=args)
                 except Exception as e:
